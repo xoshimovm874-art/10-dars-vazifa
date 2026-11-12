@@ -1,18 +1,28 @@
 [
     {
         "name": "ali",
-        "grades": []
+        "grades": [
+            4
+        ]
     },
     {
         "name": "vali",
-        "grades": []
+        "grades": [
+            5
+        ]
     },
     {
         "name": "eshmat",
-        "grades": []
+        "grades": [
+            3
+        ]
     },
     {
         "name": "toshmat",
+        "grades": []
+    },
+    {
+        "name": "gani",
         "grades": []
     }
 ]

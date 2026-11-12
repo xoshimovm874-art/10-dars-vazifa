@@ -23,9 +23,17 @@ def menu():
             ism = input("Qidirilayotgan talaba ismi: ")
             talaba_qidirish(ism)
         elif tanlov == "4":
-            ism = input("Talaba ismi: ")
-            baho = int(input("Qo'yiladigan baho: "))
-            baho_qoshish(ism, baho)
+            ism = input("Talaba ismi: ").strip()
+            try:
+                baho = int(input("Qo'yiladigan baho (1-5): "))
+            except ValueError:
+                print("Baho butun son bo'lishi kerak.")
+                continue
+
+            if 1 <= baho <= 5:
+                baho_qoshish(ism, baho)
+            else:
+                print("Baho 1 dan 5 gacha bo'lishi kerak.")
         elif tanlov == "5":
             ism = input("Talaba ismi: ")
             ortacha_baho(ism)
