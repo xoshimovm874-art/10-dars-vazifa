@@ -1,37 +1,39 @@
 import json
 
-FILE_NAME = "students.json"
+FILENAME = "students.json"
 
-def load_data():
+def talaba_qoshish(ism):
     try:
-        with open(FILE_NAME, "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return []
-
-def save_data(data):
-    with open(FILE_NAME, "w") as f:
-        json.dump(data, f, indent=4)
-
-def add_student(name):
-    students = load_data()
-    students.append({"name": name, "grades": []})
-    save_data(students)
-    print(f"'{name}' muvaffaqiyatli qo'shildi!")
-
-def list_students():
-    students = load_data()
-    if not students:
-        print("Talabalar mavjud emas.")
-        return
-    for i, s in enumerate(students, 1):
-        print(f"{i}. Ism: {s['name']} | Baholar: {s['grades']}")
-
-def search_student(name):
-    students = load_data()
-    found = [s for s in students if name.lower() in s['name'].lower()]
-    if found:
-        for s in found:
-            print(f"Topildi: {s['name']} | Baholar: {s['grades']}")
+        with open(FILENAME, "r") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {}
+    
+    if ism not in data:
+        data[ism] = []  # Bo'sh baholar ro'yxati bilan qo'shamiz
+        with open(FILENAME, "w") as f:
+            json.dump(data, f, indent=4)
+        print(f"'{ism'}' muvaffaqiyatli qo'shildi!")
     else:
-        print("Bunday talaba topilmadi.")
+        print("Bu talaba allaqachon mavjud!")
+
+def barcha_talabalar():
+    try:
+        with open(FILENAME, "r") as f:
+            data = json.load(f)
+        print("\n--- BARCHA TALABALAR ---")
+        for ism in data:
+            print(f"- {ism}")
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("Hozircha talabalar ro'yxati bo'sh.")
+
+def talaba_qidirish(ism):
+    try:
+        with open(FILENAME, "r") as f:
+            data = json.load(f)
+        if ism in data:
+            print(f"Topildi: {ism}, Baholari: {data[ism]}")
+        else:
+            print(f"'{ism}' topilmadi.")
+    except FileNotFoundError:
+        print("Ma'lumotlar bazasi topilmadi.")
