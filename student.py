@@ -13,7 +13,7 @@ def talaba_qoshish(ism):
         data[ism] = []  # Bo'sh baholar ro'yxati bilan qo'shamiz
         with open(FILENAME, "w") as f:
             json.dump(data, f, indent=4)
-        print(f"'{ism'}' muvaffaqiyatli qo'shildi!")
+        print(f"{"ism"} muvaffaqiyatli qo'shildi!")
     else:
         print("Bu talaba allaqachon mavjud!")
 
