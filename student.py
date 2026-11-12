@@ -1,42 +1,61 @@
 import json
+from pathlib import Path
 
-FILENAME = "students.json"
+FILENAME = Path(__file__).with_name("students.json")
+
+
+def load_data():
+    try:
+        with FILENAME.open("r", encoding="utf-8") as file:
+            data = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+    if isinstance(data, dict):
+        return [
+            {"name": name, "grades": grades if isinstance(grades, list) else []}
+            for name, grades in data.items()
+        ]
+    return data if isinstance(data, list) else []
+
+
+def save_data(data):
+    with FILENAME.open("w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
+
 
 def talaba_qoshish(ism):
-    try:
-        with open(FILENAME, "r") as f:
-            data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        data = {}
-    
-    if ism not in data:
-        data[ism] = []  # Bo'sh baholar ro'yxati bilan qo'shamiz
-        with open(FILENAME, "w") as f:
-            json.dump(data, f, indent=4)
-        print(f"{"ism"} muvaffaqiyatli qo'shildi!")
-    else:
+    ism = ism.strip()
+    if not ism:
+        print("Talaba ismi bo'sh bo'lmasligi kerak.")
+        return
+
+    data = load_data()
+    if any(talaba["name"].casefold() == ism.casefold() for talaba in data):
         print("Bu talaba allaqachon mavjud!")
+        return
+
+    data.append({"name": ism, "grades": []})
+    save_data(data)
+    print(f"{ism} muvaffaqiyatli qo'shildi!")
+
 
 def barcha_talabalar():
-    try:
-        with open(FILENAME, "r") as f:
-            data = json.load(f)
-        print("\n--- BARCHA TALABALAR ---")
-        for ism in data:
-            print(f"- {ism}")
-    except (FileNotFoundError, json.JSONDecodeError):
+    data = load_data()
+    if not data:
         print("Hozircha talabalar ro'yxati bo'sh.")
+        return
+
+    print("\n--- BARCHA TALABALAR ---")
+    for raqam, talaba in enumerate(data, start=1):
+        print(f"{raqam}. {talaba['name']} | Baholari: {talaba['grades']}")
+
 
 def talaba_qidirish(ism):
-    try:
-        with open(FILENAME, "r") as f:
-            data = json.load(f)
-            
-        for talaba in data:
-            if talaba["name"].lower() ==ism.lower():
-                print(f"Topildi: {ism}, Baholari: {talaba["grades"]}")
-                break
-        else:
-            print(f"'{ism}' topilmadi.")
-    except FileNotFoundError:
-        print("Ma'lumotlar bazasi topilmadi.")
+    ism = ism.strip().casefold()
+    for talaba in load_data():
+        if talaba["name"].casefold() == ism:
+            print(f"Topildi: {talaba['name']}, Baholari: {talaba['grades']}")
+            return
+
+    print(f"'{ism}' topilmadi.")
