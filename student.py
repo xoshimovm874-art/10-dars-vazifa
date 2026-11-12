@@ -31,8 +31,11 @@ def talaba_qidirish(ism):
     try:
         with open(FILENAME, "r") as f:
             data = json.load(f)
-        if ism in data:
-            print(f"Topildi: {ism}, Baholari: {data[ism]}")
+            
+        for talaba in data:
+            if talaba["name"].lower() ==ism.lower():
+                print(f"Topildi: {ism}, Baholari: {talaba["grades"]}")
+                break
         else:
             print(f"'{ism}' topilmadi.")
     except FileNotFoundError:
